@@ -25,20 +25,48 @@
     - [ ] invalid input case:
      for each helper function, provide invalid input and check that the appropriate exception is raised
 
+
+### PointSetManager commucation module
+
+Will be responsible to communicate with the PointSetManager service to retrieve point sets.
+This is just an interface between the service and the program.
+
+- [ ] test the PointSetManager communication module:
+    - [ ] success case:
+     mock the PointSetManager service to return a valid point set, check that the module correctly retrieves and parses it
+
+    - [ ] failure case:
+     mock the PointSetManager service to return an error (e.g. 404 Not Found), check that the module correctly handles the error and raises the appropriate exception from the module. 
+     The message from the api should be transferred through the exception.
+     Should raise:
+     - `ValueError` if getting a 400 Bad Request
+     - `KeyError` if getting a 404 Not Found
+     - `RuntimeError` for 503 Database Unavailable
+
+
 ### Api
 
-> Note: for all this tests, the algorithm is mocked to avoid getting errors from it when not testing it.
+> Note: for all this tests, the algorithm is mocked to avoid getting errors from it when not testing it, as well as PointSetManager communication module.
 
 - [ ] test the `triangulation` endpoint:
 
     - [ ] success case:
-     send a valid request with a set of points, check the response contains the correct triangulation
+     send a valid request with a set of points, check the response contains the correct triangulation and status code 200
     
     - [ ] invalid input case:
      send a request with invalid data (like a empty, malformed or inexistant `PointSetID`), and check the response contains the appropriate error message
+     - invalid `PointSetID` format, or empty `PointSetID`:
+        - code 400 Bad Request
+        - body in json containing a internal error code and an error message
+    - inexistant `PointSetID`:
+        - code 404 Not Found
+        - body in json containing a internal error code and an error message
 
     - [ ] algorithm failure case:
      mock the algorithm to raise an exception, send a valid request and check the response contains the appropriate error message
+        In that case, the response should be:
+        - code 500 Internal Server Error
+        - body in json containing a internal error code and an error message THAT DOES NOT REVEAL INTERNAL DETAILS OF THE SERVER (like stack traces, exception messages, etc.)
 
 ## Performance tests
 
@@ -55,3 +83,4 @@
 - [ ] For each dataset, measure:
     - the execution time
     - memory usage of the algorithm
+    > The system profile should be noted (CPU, RAM, OS, python version, etc.) to ensure reproducibility of the results.

@@ -12,6 +12,7 @@ Each point is represented by its x and y coordinates (float).
 - `__len__()`: returns the number of points in the set
 - `__getitem__(index: int)`: returns the point at the given index
 - `__setitem__(index: int, value: Tuple[float, float])`: sets the point at the given index
+- `__eq__(other: PointSet)`: checks if two PointSet objects are equal (all points are the same and in the same order)
 - `to_bytes()`: serializes the PointSet to bytes for transmission
 - *`from_bytes(data: bytes)`*: deserializes bytes to a PointSet object
 
@@ -32,11 +33,26 @@ For this reason, the Triangles object will inherit from the PointSet object.
 - `__len__()`: returns the number of triangles in the set
 - `__getitem__(index: int)`: returns the triangle at the given index
 - `__setitem__(index: int, value: Tuple[int, int, int])`: sets the triangle at the given index
+- `__eq__(other: Triangles)`: checks if two Triangles objects are equal (all triangles are the same and in the same order, and the underlying PointSets are equal)
 - `to_bytes()`: serializes the Triangles to bytes for transmission
 - *`from_bytes(data: bytes)`*: deserializes bytes to a Triangles object
 
 ### Constructor
 - `__init__(point_set: Optional[List[Tuple[float, float]]] = None, triangles: Optional[List[Tuple[int, int, int]]] = None)`: initializes the Triangles with an optional PointSet and an optional list of triangles
+
+## PointSetManager (PSM)
+The PointSetManager is a module responsible for communicating with the PointSetManager service to retrieve point sets.
+It's not a class, but a module with functions to interact with the service.
+It's a wrapper around the service API.
+
+### methods
+> Note: only the get_point_set method is required, as we don't need to register new point sets from the triangulator.
+
+- *`get_point_set(point_set_id: str) -> PointSet`*: retrieves the PointSet with the given ID from the PointSetManager service.
+    - raises `ValueError` if the request is invalid (400 Bad Request)
+    - raises `KeyError` if the PointSetID does not exist (404 Not Found)
+    - raises `RuntimeError` if the service is unavailable (503 Database Unavailable)
+
 
 
 # Tests to do
@@ -71,15 +87,15 @@ For this reason, the Triangles object will inherit from the PointSet object.
 > Note: I will not test any function with arguments of bad types, because Python 3.13 (version used) has type hints and static analysis tools can be used to check types before runtime. Bad programmers should be punished by bad reviews, not by writing redundant tests.
 
 
-- [ ] test the main algorithm:
+- [x] test the main algorithm:
 
-    - [ ] success case:
+    - [x] success case:
      given input a set of points (a `PointSet` Object), check the output is correct (a `Triangles` Object)
 
-    - [ ] invalid input case:
+    - [x] invalid input case:
      given invalid input (e.g. empty `PointSet`), check that the algorithm raises the appropriate exception
 
-    - [ ] edge case:
+    - [x] edge case:
      given input with minimal number of points (e.g. 3 points), check the output is correct
 
 - [ ] test helper functions used in the algorithm:
@@ -95,11 +111,11 @@ For this reason, the Triangles object will inherit from the PointSet object.
 Will be responsible to communicate with the PointSetManager service to retrieve point sets.
 This is just an interface between the service and the program.
 
-- [ ] test the PointSetManager communication module:
-    - [ ] success case:
-     mock the PointSetManager service to return a valid point set, check that the module correctly retrieves and parses it
+- [x] test the PointSetManager communication module:
+    - [x] success case:
+     mock the PointSetManager service to return a valid point set, check that the module correctly retrieves it
 
-    - [ ] failure case:
+    - [x] failure case:
      mock the PointSetManager service to return an error (e.g. 404 Not Found), check that the module correctly handles the error and raises the appropriate exception from the module. 
      The message from the api should be transferred through the exception.
      Should raise:

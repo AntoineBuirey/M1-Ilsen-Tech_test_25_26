@@ -1,6 +1,70 @@
-# Tests to do:
+# Objects definitions
+
+## PointSet
+A PointSet is an object that contains a set of points in 2D space.
+Each point is represented by its x and y coordinates (float).
+
+### Minimum methods
+
+- `add_point(x: float, y: float)`: adds a point to the set
+- `remove_point(index: int)`: removes the point at the given index
+- `__iter__()`: returns an iterator over the points in the set
+- `__len__()`: returns the number of points in the set
+- `__getitem__(index: int)`: returns the point at the given index
+- `__setitem__(index: int, value: Tuple[float, float])`: sets the point at the given index
+- `to_bytes()`: serializes the PointSet to bytes for transmission
+- *`from_bytes(data: bytes)`*: deserializes bytes to a PointSet object
+
+### Constructor
+- `__init__(points: Optional[List[Tuple[float, float]]] = None)`: initializes the PointSet with an optional list of points
+
+
+## Triangles
+A Triangles object is an object that contains a set of triangles in 2D space.
+Each triangle is represented by the indices of its three vertices in the original PointSet.
+The PointSet used to create the Triangles object must be stored within the Triangles object for reference.
+For this reason, the Triangles object will inherit from the PointSet object.
+
+### Minimum methods
+- `add_triangle(i1: int, i2: int, i3: int)`: adds a triangle to the set
+- `remove_triangle(index: int)`: removes the triangle at the given index
+- `__iter__()`: returns an iterator over the triangles in the set
+- `__len__()`: returns the number of triangles in the set
+- `__getitem__(index: int)`: returns the triangle at the given index
+- `__setitem__(index: int, value: Tuple[int, int, int])`: sets the triangle at the given index
+- `to_bytes()`: serializes the Triangles to bytes for transmission
+- *`from_bytes(data: bytes)`*: deserializes bytes to a Triangles object
+
+### Constructor
+- `__init__(point_set: Optional[List[Tuple[float, float]]] = None, triangles: Optional[List[Tuple[int, int, int]]] = None)`: initializes the Triangles with an optional PointSet and an optional list of triangles
+
+
+# Tests to do
 
 ## Behavior tests
+
+
+## PointSet and Triangles objects
+- [ ] test PointSet to_bytes and from_bytes methods:
+    - [ ] success case:
+     create a PointSet object, serialize it to bytes, then deserialize it back to a PointSet object, and check that the original and deserialized objects are equal
+
+    - [ ] invalid input case:
+     provide invalid bytes data to from_bytes method and check that the appropriate exception is raised. eg.
+        - data that does not represent a valid PointSet object
+        - data with invalid point coordinates (e.g. non-float values)
+        - data where the number of points is inconsistent with the data length
+
+- [ ] test Triangles to_bytes and from_bytes methods:
+    - [ ] success case:
+     create a Triangles object, serialize it to bytes, then deserialize it back to a Triangles object, and check that the original and deserialized objects are equal
+    - [ ] invalid input case:
+     provide invalid bytes data to from_bytes method and check that the appropriate exception is raised. eg.
+        - data that does not represent a valid Triangles object
+        - data that represents a Triangles object with invalid triangle indices (e.g. indices out of bounds of the PointSet)
+        - data with inconsistent number of triangles
+        - data where the PointSet part is invalid
+
 
 ### Algorithm
 

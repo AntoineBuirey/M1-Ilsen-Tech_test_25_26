@@ -128,12 +128,12 @@ This is just an interface between the service and the program.
 
 > Note: for all this tests, the algorithm is mocked to avoid getting errors from it when not testing it, as well as PointSetManager communication module.
 
-- [ ] test the `triangulation` endpoint:
+- [x] test the `triangulation` endpoint:
 
-    - [ ] success case:
+    - [x] success case:
      send a valid request with a set of points, check the response contains the correct triangulation and status code 200
     
-    - [ ] invalid input case:
+    - [x] invalid input case:
      send a request with invalid data (like a empty, malformed or inexistant `PointSetID`), and check the response contains the appropriate error message
      - invalid `PointSetID` format, or empty `PointSetID`:
         - code 400 Bad Request
@@ -142,10 +142,16 @@ This is just an interface between the service and the program.
         - code 404 Not Found
         - body in json containing a internal error code and an error message
 
-    - [ ] algorithm failure case:
+    - [x] algorithm failure case:
      mock the algorithm to raise an exception, send a valid request and check the response contains the appropriate error message
         In that case, the response should be:
         - code 500 Internal Server Error
+        - body in json containing a internal error code and an error message THAT DOES NOT REVEAL INTERNAL DETAILS OF THE SERVER (like stack traces, exception messages, etc.)
+
+    - [x] PointSetManager cannot be reached case:
+     mock the PointSetManager communication module to raise a `RuntimeError`, send a valid request and check the response contains the appropriate error message
+        In that case, the response should be:
+        - code 503 Service Unavailable
         - body in json containing a internal error code and an error message THAT DOES NOT REVEAL INTERNAL DETAILS OF THE SERVER (like stack traces, exception messages, etc.)
 
 ## Performance tests

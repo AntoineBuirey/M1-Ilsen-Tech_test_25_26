@@ -5,7 +5,7 @@ from triangulator.PSM import PointSetManager
 from io import BytesIO
 import re
 
-from datasets import DATASETS, IDS
+from datasets import POINTS, IDS
 
 RE_UUID = re.compile(r"^[0-9a-fA-F-]{36}$")
 
@@ -30,10 +30,10 @@ def mocked_urlopen(url : str|req.Request, data = None,
     if not RE_UUID.match(point_set_id):
         message = b'{"code":"BAD_REQUEST","message":"Invalid point set ID \''+ point_set_id.encode() + b'\'"}'
         return MockResponse(message, status=400)
-    if point_set_id not in DATASETS:
+    if point_set_id not in POINTS:
         message = b'{"code":"NOT_FOUND","message":"The requested resource \'' + point_set_id.encode() + b'\' could not be found"}'
         return MockResponse(message, status=404)
-    return MockResponse(DATASETS[point_set_id], status=200)
+    return MockResponse(POINTS[point_set_id], status=200)
 
 def mocked_urlopen_unavailable_database(url : str|req.Request, data = None,
     timeout: float | None = None, *, context = None):

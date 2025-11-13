@@ -1,5 +1,5 @@
 
-from .data_types import PointSet
+from .pointset import PointSet
 
 class PointSetManager:
     @staticmethod

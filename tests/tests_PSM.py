@@ -1,6 +1,6 @@
 import pytest
 import urllib.request as req
-from triangulator.data_types import PointSet
+from triangulator.pointset import PointSet
 from triangulator.PSM import PointSetManager
 from io import BytesIO
 import re

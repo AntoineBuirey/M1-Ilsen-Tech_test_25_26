@@ -10,8 +10,8 @@ Each point is represented by its x and y coordinates (float).
 - `remove_point(index: int)`: removes the point at the given index
 - `__iter__()`: returns an iterator over the points in the set
 - `__len__()`: returns the number of points in the set
-- `__getitem__(index: int)`: returns the point at the given index
-- `__setitem__(index: int, value: Tuple[float, float])`: sets the point at the given index
+- `get_point(index: int)`: returns the point at the given index
+- `set_point(index: int, value: Tuple[float, float])`: sets the point at the given index
 - `__eq__(other: PointSet)`: checks if two PointSet objects are equal (all points are the same and in the same order)
 - `to_bytes()`: serializes the PointSet to bytes for transmission
 - *`from_bytes(data: bytes)`*: deserializes bytes to a PointSet object
@@ -27,12 +27,20 @@ The PointSet used to create the Triangles object must be stored within the Trian
 For this reason, the Triangles object will inherit from the PointSet object.
 
 ### Minimum methods
-- `add_triangle(i1: int, i2: int, i3: int)`: adds a triangle to the set
-- `remove_triangle(index: int)`: removes the triangle at the given index
+- `add_triangle(i1: int, i2: int, i3: int) -> int`: adds a triangle to the set,
+    raise `IndexError` if any index is out of bounds of the underlying PointSet
+    raise `ValueError` if the three indices are not unique
+    raise `ValueError` if a triangle with the same indices already exists (regardless of the order of the indices)
+    return the index of the newly added triangle
+- `remove_triangle(index: int)`: removes the triangle at the given index,
+    raise `IndexError` if the index is out of bounds
+    return nothing
 - `__iter__()`: returns an iterator over the triangles in the set
-- `__len__()`: returns the number of triangles in the set
-- `__getitem__(index: int)`: returns the triangle at the given index
-- `__setitem__(index: int, value: Tuple[int, int, int])`: sets the triangle at the given index
+- `__len__() -> int`: returns the number of triangles in the set
+- `get_triangle(index: int) -> Triangle`: returns the triangle at the given index,
+    raise `IndexError` if the index is out of bounds
+    raise `ValueError` if the triangle at the given index is invalid (e.g. indices out of bounds of the PointSet)
+- `set_triangle(index: int, value: Tuple[int, int, int])`: sets the triangle at the given index
 - `__eq__(other: Triangles)`: checks if two Triangles objects are equal (all triangles are the same and in the same order, and the underlying PointSets are equal)
 - `to_bytes()`: serializes the Triangles to bytes for transmission
 - *`from_bytes(data: bytes)`*: deserializes bytes to a Triangles object
@@ -61,20 +69,20 @@ It's a wrapper around the service API.
 
 
 ### PointSet and Triangles objects
-- [ ] test PointSet to_bytes and from_bytes methods:
-    - [ ] success case:
+- [x] test PointSet to_bytes and from_bytes methods:
+    - [x] success case:
      create a PointSet object, serialize it to bytes, then deserialize it back to a PointSet object, and check that the original and deserialized objects are equal
 
-    - [ ] invalid input case:
+    - [x] invalid input case:
      provide invalid bytes data to from_bytes method and check that the appropriate exception is raised. eg.
         - data that does not represent a valid PointSet object
         - data with invalid point coordinates (e.g. non-float values)
         - data where the number of points is inconsistent with the data length
 
-- [ ] test Triangles to_bytes and from_bytes methods:
-    - [ ] success case:
+- [x] test Triangles to_bytes and from_bytes methods:
+    - [x] success case:
      create a Triangles object, serialize it to bytes, then deserialize it back to a Triangles object, and check that the original and deserialized objects are equal
-    - [ ] invalid input case:
+    - [x] invalid input case:
      provide invalid bytes data to from_bytes method and check that the appropriate exception is raised. eg.
         - data that does not represent a valid Triangles object
         - data that represents a Triangles object with invalid triangle indices (e.g. indices out of bounds of the PointSet)
@@ -99,6 +107,7 @@ It's a wrapper around the service API.
      given input with minimal number of points (e.g. 3 points), check the output is correct
 
 - [ ] test helper functions used in the algorithm:
+    > will be done once the helper functions are implemented
     - [ ] success case:
      for each helper function, provide valid input and check the output is as expected
 

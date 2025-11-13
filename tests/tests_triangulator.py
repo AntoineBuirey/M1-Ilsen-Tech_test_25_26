@@ -1,6 +1,7 @@
 import pytest
 
-from triangulator.data_types import PointSet, Triangles
+from triangulator.triangles import Triangles
+from triangulator.pointset import PointSet
 from triangulator.triangulator import triangulate
 
 class TestTriangulator:
@@ -14,7 +15,6 @@ class TestTriangulator:
         points, expected = dataset
         result = triangulate(points)
         assert result == expected
-        assert result.points == expected.points
 
 
 

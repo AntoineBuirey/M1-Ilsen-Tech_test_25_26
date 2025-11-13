@@ -60,7 +60,7 @@ It's a wrapper around the service API.
 ## Behavior tests
 
 
-## PointSet and Triangles objects
+### PointSet and Triangles objects
 - [ ] test PointSet to_bytes and from_bytes methods:
     - [ ] success case:
      create a PointSet object, serialize it to bytes, then deserialize it back to a PointSet object, and check that the original and deserialized objects are equal

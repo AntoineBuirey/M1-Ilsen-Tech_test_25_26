@@ -37,4 +37,5 @@ jobs:
         if: (!cancelled())
         with:
           name: coverage-report
+          path: .coverage
 

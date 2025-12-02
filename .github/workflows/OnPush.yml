@@ -33,7 +33,7 @@ jobs:
             test-results/results.xml
 
       - name: Upload coverage to GitHub
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5
         if: (!cancelled())
         with:
           name: coverage-report

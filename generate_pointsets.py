@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-génère un fichier contanant : 
+"""génère un fichier contanant :
 
 SEED = ... # graine pour le générateur aléatoire (permet des résultats reproductibles)
 
@@ -31,12 +30,12 @@ La représentation binaire de Triangles est donc en deux parties:
   - 3 x 4 x {nombre de triangles} bytes, pour chaque triangle il y a donc 12 bytes, chaque 4 bytes sont un unsigned long qui référence l'indice d'un sommet du triangle dans le PointSet.
 """
 
-import os
-import struct
-import random
-from typing import TextIO
-import random
 import argparse
+import os
+import random
+import struct
+from typing import TextIO
+
 
 def random_hex_digit() -> str:
     return random.choice("0123456789abcdef")
@@ -110,8 +109,7 @@ def encode_triangles(points : list[tuple[float, float]], triangles : list[tuple[
 
 
 def create_triangle(points : list[tuple[float, float]]) -> list[tuple[int, int, int]]:
-    """
-    Créé des triangles entre tous les points
+    """Créé des triangles entre tous les points
     """
     triangles = []
     # Triangulation très basique : on crée des triangles en reliant chaque point avec le point suivant et le point après le suivant

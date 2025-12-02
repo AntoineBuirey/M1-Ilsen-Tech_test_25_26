@@ -1,12 +1,13 @@
-import pytest
-from random import randint
-from typing import Iterator
 import time
+from collections.abc import Iterator
+from random import randint
 
-from triangulator.triangulator import triangulate
-from triangulator.pointset import PointSet
+import pytest
+
 from triangulator.data_types import Point
+from triangulator.pointset import PointSet
 from triangulator.triangles import Triangles
+from triangulator.triangulator import triangulate
 
 
 def generate_random_points(num_points: int) -> Iterator[Point]:

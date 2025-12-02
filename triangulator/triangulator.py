@@ -1,16 +1,30 @@
+"""Triangulator module."""
+
 from .pointset import PointSet
 from .triangles import Triangles
-from .PSM import PointSetManager
+
 
 def triangulate(points: PointSet) -> Triangles:
+    """Triangulate a set of points.
+
+    Args:
+        points (PointSet): The PointSet to triangulate.
+
+    Returns:
+        Triangles: The triangulated result.
+
+    """
     pass
 
 
 def get_and_compute(point_set_id: str) -> bytes:
-    """
-    This method retrieves a PointSet by its ID using the PointSetManager,
-    computes its triangulation using the triangulate function, and returns
-    the serialized Triangles object as bytes.
-    called by the HTTP server to handle requests.
+    """Retrieve a PointSet by its ID using the PointSetManager.
+
+    Args:
+        point_set_id (str): The ID of the PointSet to retrieve and triangulate.
+
+    Returns:
+        bytes: The serialized Triangles object.
+
     """
     pass

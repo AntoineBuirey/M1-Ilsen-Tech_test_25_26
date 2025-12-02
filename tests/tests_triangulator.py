@@ -1,8 +1,9 @@
 import pytest
 
-from triangulator.triangles import Triangles
 from triangulator.pointset import PointSet
+from triangulator.triangles import Triangles
 from triangulator.triangulator import triangulate
+
 
 class TestTriangulator:
     @pytest.mark.parametrize("dataset", [

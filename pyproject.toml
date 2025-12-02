@@ -46,6 +46,7 @@ markers = [
 ]
 
 
+
 [tool.ruff.lint]
 select = [
     "D",
@@ -56,3 +57,19 @@ select = [
     "SIM",
     "I",
 ]
+
+[tool.ruff]
+exclude = [
+    "venv",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "tests",
+    "generate_pointsets.py",
+]
+
+line-length = 255
+
+[tool.coverage.run]
+source = ["triangulator"]

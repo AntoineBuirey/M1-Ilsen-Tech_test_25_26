@@ -1,11 +1,12 @@
-import pytest
+import re
 import urllib.request as req
+from io import BytesIO
+
+import pytest
+from datasets import IDS, POINTS
+
 from triangulator.pointset import PointSet
 from triangulator.PSM import PointSetManager
-from io import BytesIO
-import re
-
-from datasets import POINTS, IDS
 
 RE_UUID = re.compile(r"^[0-9a-fA-F-]{36}$")
 

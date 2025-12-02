@@ -1,7 +1,5 @@
 import pytest
-
-from datasets import IDS, TRIANGLES, MALFORMED_ID, UNKNOWN_ID
-
+from datasets import IDS, MALFORMED_ID, TRIANGLES, UNKNOWN_ID
 
 
 def mocked_get_and_compute(point_set_id: str) -> bytes:

@@ -2,6 +2,7 @@ name: Deploy Documentation
 
 permissions:
   id-token: write
+  pages: write
  
 on:
   push:

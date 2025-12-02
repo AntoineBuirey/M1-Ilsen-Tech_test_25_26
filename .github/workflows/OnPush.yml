@@ -37,5 +37,6 @@ jobs:
         if: (!cancelled())
         with:
           name: coverage-report
+          include-hidden-files: true
           path: .coverage
 

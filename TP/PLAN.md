@@ -167,7 +167,7 @@ This is just an interface between the service and the program.
 
 > Note: only the main algorithm is tested here, not the api, because the api the performance can be affected by many external factors (network latency, server load, etc.) that are not related to the algorithm itself.
 
-- [ ] test the performance of the algorithm with datasets of increasing size:
+- [x] test the performance of the algorithm with datasets of increasing size:
     - minimal dataset (3 points)
     - vey-small dataset (e.g. 100 points)
     - small dataset (e.g. 1,000 points)
@@ -177,5 +177,5 @@ This is just an interface between the service and the program.
 
 - [ ] For each dataset, measure:
     - the execution time
-    - memory usage of the algorithm
-    > The system profile should be noted (CPU, RAM, OS, python version, etc.) to ensure reproducibility of the results.
+    - ~~memory usage of the algorithm~~ (cannot be done because of the constraints of available external libraries)
+    > ~~The system profile should be noted (CPU, RAM, OS, python version, etc.) to ensure reproducibility of the results.~~

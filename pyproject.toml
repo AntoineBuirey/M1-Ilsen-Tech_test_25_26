@@ -41,6 +41,9 @@ testpaths = [
 python_files = [
     "tests_*.py"
 ]
+markers = [
+    "performance: mark a test as a performance test. enabled by default, can be disabled with -m \"not performance\"",
+]
 
 
 [tool.ruff.lint]

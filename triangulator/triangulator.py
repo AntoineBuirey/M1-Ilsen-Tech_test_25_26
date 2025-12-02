@@ -1,4 +1,5 @@
-from .data_types import PointSet, Triangles
+from .pointset import PointSet
+from . triangles import Triangles
 from .PSM import PointSetManager
 
 def triangulate(points: PointSet) -> Triangles:

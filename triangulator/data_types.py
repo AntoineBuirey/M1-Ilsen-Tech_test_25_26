@@ -55,7 +55,7 @@ class Triangle:
     
     def __init__(self, p1: int, p2: int, p3: int) -> None:
         """Initialize the Triangle with three point indices."""
-        self.__points = (p1, p2, p3)
+        self.__points = {p1, p2, p3}
     
     def __eq__(self, other: object) -> bool:
         """Compare this Triangle with another Triangle for equality.
@@ -72,10 +72,10 @@ class Triangle:
         """
         if not isinstance(other, Triangle):
             raise TypeError("Comparison is only supported with Triangle.")
-        return set(self.__points) == set(other.__points)
+        return self.__points == other.__points
 
     @property
-    def indices(self) -> tuple[int, int, int]:
+    def indices(self) -> set[int]:
         """Return the indices of the points that make up the triangle.
 
         Returns:

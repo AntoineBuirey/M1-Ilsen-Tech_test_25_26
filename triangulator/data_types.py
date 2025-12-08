@@ -50,6 +50,15 @@ class Point:
         """
         return self.__y
     
+    def __repr__(self) -> str:
+        """Return a string representation of the Point.
+
+        Returns:
+            str: A string representation of the Point.
+
+        """
+        return f"Point({self.x}, {self.y})"
+    
 class Triangle:
     """A triangle defined by three point indices."""
     
@@ -73,6 +82,16 @@ class Triangle:
         if not isinstance(other, Triangle):
             raise TypeError("Comparison is only supported with Triangle.")
         return self.__points == other.__points
+    
+    def __repr__(self) -> str:
+        """Return a string representation of the Triangle.
+
+        Returns:
+            str: A string representation of the Triangle.
+
+        """
+        pts = sorted(self.__points)
+        return f"Triangle({pts[0]}, {pts[1]}, {pts[2]})"
 
     @property
     def indices(self) -> set[int]:
@@ -83,3 +102,4 @@ class Triangle:
 
         """
         return self.__points
+    

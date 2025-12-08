@@ -16,6 +16,7 @@ def generate_random_points(num_points: int) -> Iterator[Point]:
 
 
 @pytest.mark.performance
+@pytest.mark.timeout(60)
 @pytest.mark.parametrize("num_points", [3, 100, 1_000, 10_000, 100_000, 1_000_000],
                          ids=["MIN", "XS", "S", "M", "L", "XL"])
 def test_triangulate_large_pointset(num_points: int):

@@ -15,6 +15,7 @@ class TestTriangulator:
     def test_triangulate_success(self, dataset : tuple[PointSet, Triangles]) -> None:
         points, expected = dataset
         result = triangulate(points)
+        print(f"Result:   {result}\nExpected: {expected}")
         assert result == expected
 
 

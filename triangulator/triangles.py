@@ -223,3 +223,12 @@ class Triangles:
             return cls(points=pointset, triangles=triangles)
         except Exception as e:
             raise ValueError("Invalid or corrupted data for Triangles deserialization.") from e
+    
+    def __repr__(self) -> str:
+        """Return a string representation of the Triangles.
+
+        Returns:
+            str: A string representation of the Triangles.
+
+        """
+        return f"Triangles(points={self._points}, triangles={self._triangles})"

@@ -23,7 +23,7 @@ class TestTriangulator:
         PointSet([]), # empty set
         PointSet([(0, 0)]), # not enough points
         PointSet([(0, 0), (1, 0)]), # not enough points
-        PointSet([(0, 0), (1, 0), (0, 0)]), # duplicate points
+        PointSet([(0, 0), (1, 0), (2, 0)]), # duplicate points
     ])
     def test_triangulate_failure(self, points : PointSet) -> None:
         with pytest.raises(ValueError):

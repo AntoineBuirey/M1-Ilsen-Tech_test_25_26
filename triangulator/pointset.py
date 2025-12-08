@@ -143,6 +143,35 @@ class PointSet:
             data += pack('!ff', point.x, point.y)
         return data
     
+
+    @classmethod
+    def from_bytes_with_size(cls, data: bytes, nb_points) -> 'PointSet':
+        """Deserialize bytes to a PointSet object.
+        Only handle the points data, nb_points must be provided.
+
+        Args:
+            data (bytes): The bytes to deserialize.
+
+        Raises:
+            ValueError: If the data is invalid.
+
+        Returns:
+            PointSet: The deserialized PointSet object.
+
+        """
+        point_size = calcsize('!ff')
+        expected_size = nb_points * point_size
+        if len(data) != expected_size:
+            raise ValueError(f"Invalid data: size does not match number of points. (expected {expected_size}, got {len(data)})")
+        points = []
+        offset = 0
+        for _ in range(nb_points):
+            x, y = unpack('!ff', data[offset:offset + point_size])
+            points.append(_Point(x, y))
+            offset += point_size
+        return cls(points)
+    
+    
     @classmethod
     def from_bytes(cls, data: bytes) -> 'PointSet':
         """Deserialize bytes to a PointSet object.
@@ -157,20 +186,10 @@ class PointSet:
             PointSet: The deserialized PointSet object.
 
         """
-        point_size = calcsize('!ff')
         if len(data) < 4:
             raise ValueError("Invalid data: too short to contain number of points.")
         nb_points = unpack('!L', data[:4])[0]
-        expected_size = 4 + nb_points * point_size
-        if len(data) != expected_size:
-            raise ValueError("Invalid data: size does not match number of points.")
-        points = []
-        offset = 4
-        for _ in range(nb_points):
-            x, y = unpack('!ff', data[offset:offset + point_size])
-            points.append(_Point(x, y))
-            offset += point_size
-        return cls(points)
+        return cls.from_bytes_with_size(data[4:], nb_points)
 
     def __repr__(self) -> str:
         """Return a string representation of the PointSet.

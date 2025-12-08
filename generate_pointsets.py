@@ -94,17 +94,17 @@ def generate_pointset(min_points : int, max_points : int) -> list[tuple[float, f
     return list(points)
     
 def encode_pointset(points : list[tuple[float, float]]) -> bytes:
-    result : bytes = struct.pack("<I", len(points))
+    result : bytes = struct.pack(">I", len(points))
     for point in points:
-        result += struct.pack("<ff", point[0], point[1])
+        result += struct.pack(">ff", point[0], point[1])
     return result
 
 def encode_triangles(points : list[tuple[float, float]], triangles : list[tuple[int, int, int]]) -> bytes:
     pointset_bytes = encode_pointset(points)
     result : bytes = pointset_bytes
-    result += struct.pack("<I", len(triangles))
+    result += struct.pack(">I", len(triangles))
     for triangle in triangles:
-        result += struct.pack("<III", triangle[0], triangle[1], triangle[2])
+        result += struct.pack(">III", triangle[0], triangle[1], triangle[2])
     return result
 
 

@@ -1,9 +1,10 @@
 import re
+import os
 import urllib.request as req
 from io import BytesIO
 
 import pytest
-from datasets import IDS, POINTS
+from datasets import IDS, POINTS, UNKNOWN_ID, MALFORMED_ID
 
 from triangulator.pointset import PointSet
 from triangulator.PSM import PointSetManager
@@ -18,6 +19,12 @@ class MockResponse:
         
     def read(self, amt: int | None = None) -> bytes:
         return self._data.read(amt)
+    
+    def __enter__(self) -> "MockResponse":
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
+        self._data.close()
 
 
 def mocked_urlopen(url : str|req.Request, data = None,
@@ -40,33 +47,40 @@ def mocked_urlopen_unavailable_database(url : str|req.Request, data = None,
     timeout: float | None = None, *, context = None):
     return MockResponse(b'{"code":"SERVICE_UNAVAILABLE","message":"Database is currently unavailable"}', status=503)
 
-
+def mocked_getenv(key: str, default: str | None = None) -> str | None:
+    if key == "POINTSET_API_URL":
+        return "http://mocked.api/pointset"
+    return default
 
 class TestPointSetManager:
     @pytest.mark.parametrize("point_set_id", IDS[2:])
     def test_get_point_set_success(self, monkeypatch, point_set_id : str) -> None:
         monkeypatch.setattr(req, "urlopen", mocked_urlopen)
+        monkeypatch.setattr(os, "getenv", mocked_getenv)
         point_set = PointSetManager.get_point_set(point_set_id)
         assert isinstance(point_set, PointSet)
 
     @pytest.mark.parametrize("point_set_id", [
         "non-existent-id-0000-0000-000000000000", # invalid UUID
-        "123e4567-e89b-12d3-a456-426614174000",   # valid UUID but not in DATASETS
+        UNKNOWN_ID,   # valid UUID but not in DATASETS
     ])
     def test_get_point_set_not_found(self, monkeypatch, point_set_id : str) -> None:
         monkeypatch.setattr(req, "urlopen", mocked_urlopen)
+        monkeypatch.setattr(os, "getenv", mocked_getenv)
         with pytest.raises(KeyError) as excinfo:
             PointSetManager.get_point_set(point_set_id)
-        assert f"The requested resource '{point_set_id}' could not be found" in str(excinfo.value)
+        assert f"The requested resource '{point_set_id}' could not be found" in excinfo.value.args[0]
 
     def test_get_point_set_unavailable_database(self, monkeypatch) -> None:
         monkeypatch.setattr(req, "urlopen", mocked_urlopen_unavailable_database)
+        monkeypatch.setattr(os, "getenv", mocked_getenv)
         with pytest.raises(RuntimeError) as excinfo:
             PointSetManager.get_point_set(IDS[2])
         assert "Database is currently unavailable" in str(excinfo.value)
 
     def test_get_point_set_invalid_id(self, monkeypatch) -> None:
         monkeypatch.setattr(req, "urlopen", mocked_urlopen)
-        with pytest.raises(ValueError) as excinfo:
-            PointSetManager.get_point_set("invalid-uuid-format")
-        assert "Invalid point set ID 'invalid-uuid-format'" in str(excinfo.value)
+        monkeypatch.setattr(os, "getenv", mocked_getenv)
+        with pytest.raises(KeyError) as excinfo:
+            PointSetManager.get_point_set(MALFORMED_ID)
+        assert f"The requested resource '{MALFORMED_ID}' could not be found" in excinfo.value.args[0]

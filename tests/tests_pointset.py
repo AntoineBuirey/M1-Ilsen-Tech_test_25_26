@@ -45,6 +45,7 @@ class TestPointSet:
 
     def test_to_from_bytes(self, sample_pointset: PointSet) -> None:
         data = sample_pointset.to_bytes()
+        print(data)
         new_pointset = PointSet.from_bytes(data)
         assert len(new_pointset) == len(sample_pointset)
         for i in range(len(sample_pointset)):

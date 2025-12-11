@@ -1,20 +1,21 @@
 
+.PHONY: test unit_test perf_test coverage lint doc
 
 test:
-	pytest
+	@pytest --no-summary
 
 unit_test:
-	python -m "not performance"
+	@pytest -m "not performance"
 
 perf_test:
-	python -m performance
+	@pytest -m "performance"
 
 coverage:
-	-coverage run -m pytest
-	coverage report -m
+	@-coverage run -m pytest -m "not performance"
+	@coverage report -m
 
 lint:
-	ruff check
+	@ruff check
 
 doc:
-	pdoc3 --output-dir docs --force --html triangulator
+	@pdoc3 --output-dir docs --force --html triangulator

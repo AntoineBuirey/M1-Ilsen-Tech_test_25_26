@@ -25,7 +25,7 @@ class PointSetManager:
 
         """
         if not RE_UUID.match(point_set_id):
-            raise KeyError(f"The requested resource '{point_set_id}' could not be found")
+            raise ValueError(f"Malformed point set ID: {point_set_id}")
         
         api_base_url = os.getenv("POINTSET_API_URL")
         if api_base_url is None:

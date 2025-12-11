@@ -30,6 +30,15 @@ class Point:
         else:
             raise TypeError("Comparison is only supported with Point, tuple of two floats, or list of two floats.")
     
+    def __hash__(self) -> int:
+        """Return the hash of the Point.
+
+        Returns:
+            int: The hash of the Point.
+
+        """
+        return hash((self.x, self.y))
+    
     @property
     def x(self) -> float:
         """Return the x coordinate of the point.

@@ -60,16 +60,13 @@ class TestPointSetManager:
         point_set = PointSetManager.get_point_set(point_set_id)
         assert isinstance(point_set, PointSet)
 
-    @pytest.mark.parametrize("point_set_id", [
-        "non-existent-id-0000-0000-000000000000", # invalid UUID
-        UNKNOWN_ID,   # valid UUID but not in DATASETS
-    ])
-    def test_get_point_set_not_found(self, monkeypatch, point_set_id : str) -> None:
+
+    def test_get_point_set_not_found(self, monkeypatch) -> None:
         monkeypatch.setattr(req, "urlopen", mocked_urlopen)
         monkeypatch.setattr(os, "getenv", mocked_getenv)
         with pytest.raises(KeyError) as excinfo:
-            PointSetManager.get_point_set(point_set_id)
-        assert f"The requested resource '{point_set_id}' could not be found" in excinfo.value.args[0]
+            PointSetManager.get_point_set(UNKNOWN_ID)
+        assert f"The requested resource '{UNKNOWN_ID}' could not be found" in excinfo.value.args[0]
 
     def test_get_point_set_unavailable_database(self, monkeypatch) -> None:
         monkeypatch.setattr(req, "urlopen", mocked_urlopen_unavailable_database)
@@ -81,6 +78,6 @@ class TestPointSetManager:
     def test_get_point_set_invalid_id(self, monkeypatch) -> None:
         monkeypatch.setattr(req, "urlopen", mocked_urlopen)
         monkeypatch.setattr(os, "getenv", mocked_getenv)
-        with pytest.raises(KeyError) as excinfo:
+        with pytest.raises(ValueError) as excinfo:
             PointSetManager.get_point_set(MALFORMED_ID)
-        assert f"The requested resource '{MALFORMED_ID}' could not be found" in excinfo.value.args[0]
+        assert f"Malformed point set ID: {MALFORMED_ID}" in excinfo.value.args[0]

@@ -15,6 +15,14 @@ class TestPointSet:
         assert sample_pointset.get_point(2) == (2.0, 2.0)
         with pytest.raises(IndexError):
             sample_pointset.get_point(3)
+            
+    def test_pointset_equality(self, sample_pointset: PointSet) -> None:
+        other_pointset = PointSet([ (0.0, 0.0), (1.0, 1.0), (2.0, 2.0) ])
+        different_pointset = PointSet([ (0.0, 0.0), (1.0, 1.0) ])
+        assert sample_pointset == other_pointset
+        assert sample_pointset != different_pointset
+        with pytest.raises(TypeError):
+            _ = sample_pointset == "not a pointset"
     
     def test_set_point(self, sample_pointset: PointSet) -> None:
         sample_pointset.set_point(1, (5.0, 5.0))
@@ -56,3 +64,7 @@ class TestPointSet:
         with pytest.raises(ValueError):
             PointSet.from_bytes(invalid_data)
 
+    def test_from_bytes_with_size_wrong_size(self) -> None:
+        data = (3).to_bytes(4, byteorder='little') + b'\x00' * 16  # only 1 point instead of 3
+        with pytest.raises(ValueError):
+            PointSet.from_bytes(data)

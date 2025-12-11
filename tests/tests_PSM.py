@@ -1,6 +1,7 @@
 import re
 import os
 import urllib.request as req
+from urllib.error import URLError
 from io import BytesIO
 
 import pytest
@@ -43,6 +44,15 @@ def mocked_urlopen(url : str|req.Request, data = None,
         return MockResponse(message, status=404)
     return MockResponse(POINTS[point_set_id], status=200)
 
+def mocked_urlopen_other_code(url : str|req.Request, data = None,
+    timeout: float | None = None, *, context = None):
+    # return a code 100 error
+    return MockResponse(b'{"code":"CONTINUE","message":"Continue"}', status=100)
+
+def mocked_urlopen_url_error(url : str|req.Request, data = None,
+    timeout: float | None = None, *, context = None):
+    raise URLError("Mocked connection error")
+
 def mocked_urlopen_unavailable_database(url : str|req.Request, data = None,
     timeout: float | None = None, *, context = None):
     return MockResponse(b'{"code":"SERVICE_UNAVAILABLE","message":"Database is currently unavailable"}', status=503)
@@ -81,3 +91,24 @@ class TestPointSetManager:
         with pytest.raises(ValueError) as excinfo:
             PointSetManager.get_point_set(MALFORMED_ID)
         assert f"Malformed point set ID: {MALFORMED_ID}" in excinfo.value.args[0]
+        
+    def test_get_point_set_no_api_url(self, monkeypatch) -> None:
+        monkeypatch.setattr(req, "urlopen", mocked_urlopen)
+        monkeypatch.setattr(os, "getenv", lambda key, default=None: None)
+        with pytest.raises(RuntimeError) as excinfo:
+            PointSetManager.get_point_set(IDS[2])
+        assert "POINTSET_API_URL environment variable is not set." in str(excinfo.value)
+        
+    def test_get_point_set_other_error(self, monkeypatch) -> None:
+        monkeypatch.setattr(req, "urlopen", mocked_urlopen_other_code)
+        monkeypatch.setattr(os, "getenv", mocked_getenv)
+        with pytest.raises(RuntimeError) as excinfo:
+            PointSetManager.get_point_set(IDS[2])
+        assert "Failed to retrieve PointSet" in str(excinfo.value)
+        
+    def test_get_point_set_url_error(self, monkeypatch) -> None:
+        monkeypatch.setattr(req, "urlopen", mocked_urlopen_url_error)
+        monkeypatch.setattr(os, "getenv", mocked_getenv)
+        with pytest.raises(ConnectionError) as excinfo:
+            PointSetManager.get_point_set(IDS[2])
+        assert "Failed to connect to the PointSet API" in str(excinfo.value)

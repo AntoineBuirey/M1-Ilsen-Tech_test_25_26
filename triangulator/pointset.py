@@ -121,7 +121,7 @@ class PointSet:
 
         """
         if not isinstance(other, PointSet):
-            return NotImplemented
+            raise TypeError("Can only compare PointSet with another PointSet.")
         return self.__points == other.__points
     
     def to_bytes(self) -> bytes:

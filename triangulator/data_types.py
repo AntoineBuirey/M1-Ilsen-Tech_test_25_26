@@ -5,7 +5,8 @@ class Point:
 
     def __init__(self, x: float, y: float) -> None:
         """Initialize the Point with x and y coordinates."""
-        pass
+        self.__x = x
+        self.__y = y
     
     def __eq__(self, other: object) -> bool:
         """Compare this Point with another Point for equality.
@@ -20,7 +21,21 @@ class Point:
             bool: True if the points are equal, False otherwise.
 
         """
-        pass
+        if isinstance(other, Point):
+            return self.x == other.x and self.y == other.y
+        elif isinstance(other, (tuple, list)) and len(other) == 2:
+            return self.x == other[0] and self.y == other[1]
+        else:
+            raise TypeError("Comparison is only supported with Point, tuple of two floats, or list of two floats.")
+    
+    def __hash__(self) -> int:
+        """Return the hash of the Point.
+
+        Returns:
+            int: The hash of the Point.
+
+        """
+        return hash((self.x, self.y))
     
     @property
     def x(self) -> float:
@@ -30,7 +45,7 @@ class Point:
             float: The x coordinate of the point.
 
         """
-        pass
+        return self.__x
     
     @property
     def y(self) -> float:
@@ -40,14 +55,23 @@ class Point:
             float: The y coordinate of the point.
 
         """
-        pass
+        return self.__y
+    
+    def __repr__(self) -> str:
+        """Return a string representation of the Point.
+
+        Returns:
+            str: A string representation of the Point.
+
+        """
+        return f"Point({self.x}, {self.y})"
     
 class Triangle:
     """A triangle defined by three point indices."""
     
     def __init__(self, p1: int, p2: int, p3: int) -> None:
         """Initialize the Triangle with three point indices."""
-        pass
+        self.__points = {p1, p2, p3}
     
     def __eq__(self, other: object) -> bool:
         """Compare this Triangle with another Triangle for equality.
@@ -62,14 +86,27 @@ class Triangle:
             bool: True if the triangles are equal, False otherwise. The order of points does not matter.
 
         """
-        pass
+        if not isinstance(other, Triangle):
+            raise TypeError("Comparison is only supported with Triangle.")
+        return self.__points == other.__points
+    
+    def __repr__(self) -> str:
+        """Return a string representation of the Triangle.
+
+        Returns:
+            str: A string representation of the Triangle.
+
+        """
+        pts = sorted(self.__points)
+        return f"Triangle({pts[0]}, {pts[1]}, {pts[2]})"
 
     @property
-    def indices(self) -> set[int, int, int]:
+    def indices(self) -> set[int]:
         """Return the indices of the points that make up the triangle.
 
         Returns:
-            set[int, int, int]: The indices of the points that make up the triangle.
+            tuple[int, int, int]: The indices of the points that make up the triangle.
 
         """
-        pass
+        return self.__points
+    

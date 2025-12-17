@@ -1,7 +1,7 @@
 import pytest
 
 from triangulator.pointset import PointSet
-
+from triangulator.data_types import Point
 
 class TestPointSet:
     @pytest.fixture
@@ -15,6 +15,14 @@ class TestPointSet:
         assert sample_pointset.get_point(2) == (2.0, 2.0)
         with pytest.raises(IndexError):
             sample_pointset.get_point(3)
+            
+    def test_pointset_equality(self, sample_pointset: PointSet) -> None:
+        other_pointset = PointSet([ (0.0, 0.0), (1.0, 1.0), (2.0, 2.0) ])
+        different_pointset = PointSet([ (0.0, 0.0), (1.0, 1.0) ])
+        assert sample_pointset == other_pointset
+        assert sample_pointset != different_pointset
+        with pytest.raises(TypeError):
+            _ = sample_pointset == "not a pointset"
     
     def test_set_point(self, sample_pointset: PointSet) -> None:
         sample_pointset.set_point(1, (5.0, 5.0))
@@ -33,7 +41,7 @@ class TestPointSet:
     def test_add_point(self, sample_pointset: PointSet) -> None:
         index = sample_pointset.add_point((3.0, 3.0))
         assert index == 3
-        assert sample_pointset.get_point(3) == (3.0, 3.0)
+        assert sample_pointset.get_point(3) == Point(3.0, 3.0)
         with pytest.raises(ValueError):
             sample_pointset.add_point((1.0, 1.0))
             
@@ -45,6 +53,7 @@ class TestPointSet:
 
     def test_to_from_bytes(self, sample_pointset: PointSet) -> None:
         data = sample_pointset.to_bytes()
+        print(data)
         new_pointset = PointSet.from_bytes(data)
         assert len(new_pointset) == len(sample_pointset)
         for i in range(len(sample_pointset)):
@@ -55,10 +64,7 @@ class TestPointSet:
         with pytest.raises(ValueError):
             PointSet.from_bytes(invalid_data)
 
-    def test_from_bytes_corrupted(self) -> None:
-        points = [ (0.0, 0.0), (1.0, 1.0) ]
-        pointset = PointSet(points)
-        data = pointset.to_bytes()
-        corrupted_data = data[:-1] + b'\xFF'  # corrupt the last byte
+    def test_from_bytes_with_size_wrong_size(self) -> None:
+        data = (3).to_bytes(4, byteorder='little') + b'\x00' * 16  # only 1 point instead of 3
         with pytest.raises(ValueError):
-            PointSet.from_bytes(corrupted_data)
+            PointSet.from_bytes(data)

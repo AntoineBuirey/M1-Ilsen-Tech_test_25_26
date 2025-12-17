@@ -23,9 +23,7 @@ class Point:
         """
         if isinstance(other, Point):
             return self.x == other.x and self.y == other.y
-        elif isinstance(other, tuple) and len(other) == 2:
-            return self.x == other[0] and self.y == other[1]
-        elif isinstance(other, list) and len(other) == 2:
+        elif isinstance(other, (tuple, list)) and len(other) == 2:
             return self.x == other[0] and self.y == other[1]
         else:
             raise TypeError("Comparison is only supported with Point, tuple of two floats, or list of two floats.")

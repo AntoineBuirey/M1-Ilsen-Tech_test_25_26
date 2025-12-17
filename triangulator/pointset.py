@@ -1,7 +1,7 @@
 """"Module for managing a set of 2D points."""
 
 from collections.abc import Iterable, Iterator
-from struct import pack, unpack, calcsize
+from struct import calcsize, pack, unpack
 
 from .data_types import Point as _Point
 
@@ -147,10 +147,12 @@ class PointSet:
     @classmethod
     def from_bytes_with_size(cls, data: bytes, nb_points) -> 'PointSet':
         """Deserialize bytes to a PointSet object.
+        
         Only handle the points data, nb_points must be provided.
 
         Args:
             data (bytes): The bytes to deserialize.
+            nb_points (int): The number of points to read from the data.
 
         Raises:
             ValueError: If the data is invalid.

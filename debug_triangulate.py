@@ -1,8 +1,9 @@
 """Debug script for triangulation."""
 
-from triangulator.pointset import PointSet
-from triangulator.data_types import Point as _Point
 from typing import cast
+
+from triangulator.data_types import Point as _Point
+from triangulator.pointset import PointSet
 
 points_data = [(0.0, 0.0), (2.0, 0.0), (1.0, 1.0), (0.0, 2.0), (2.0, 2.0)]
 points = PointSet(points_data)
@@ -81,7 +82,7 @@ for i in range(n):
         
         if det > 0:
             bad_triangles.append(tri_idx)
-            print(f"    -> BAD (point inside circumcircle)")
+            print("    -> BAD (point inside circumcircle)")
     
     # Find polygon boundary
     polygon = []
@@ -127,7 +128,7 @@ for i in range(n):
     print(f"  New triangles: {new_triangles}")
     print(f"  Triangles after: {triangles_list}")
 
-print(f"\n=== Final triangles (before filtering super-triangle) ===")
+print("\n=== Final triangles (before filtering super-triangle) ===")
 print(f"Triangles: {triangles_list}")
 
 # Filter out super-triangle vertices

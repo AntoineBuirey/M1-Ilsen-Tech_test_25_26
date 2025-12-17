@@ -1,10 +1,11 @@
 """Triangulator module."""
 
 from typing import cast
-from .pointset import PointSet
-from .triangles import Triangles
-from .PSM import PointSetManager
+
 from .data_types import Point as _Point
+from .pointset import PointSet
+from .PSM import PointSetManager
+from .triangles import Triangles
 
 
 def triangulate(points: PointSet) -> Triangles:

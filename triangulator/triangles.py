@@ -1,7 +1,7 @@
 """Module for managing a set of triangles defined by a PointSet and a list of triangles."""
 
 from collections.abc import Iterable, Iterator
-from struct import pack, unpack, calcsize
+from struct import calcsize, pack, unpack
 
 from .data_types import Point as _Point
 from .data_types import Triangle as _Triangle
@@ -97,8 +97,7 @@ class Triangles:
             Iterable[Triangle]: An iterator over the triangles in the set.
 
         """
-        for triangle in self._triangles:
-            yield triangle
+        yield from self._triangles
     
     def nb_triangles(self) -> int:
         """Return the number of triangles in the set.

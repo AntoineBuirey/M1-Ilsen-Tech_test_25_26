@@ -5,7 +5,6 @@ import re
 import urllib.request as req
 from urllib.error import URLError
 
-
 from .pointset import PointSet
 
 RE_UUID = re.compile(r"^[0-9a-fA-F-]{36}$")

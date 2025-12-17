@@ -4,6 +4,7 @@ import flask as fk
 
 from .triangulator import get_and_compute
 
+
 class HTTPServer(fk.Flask):
     """HTTP server for the triangulator application.
 
